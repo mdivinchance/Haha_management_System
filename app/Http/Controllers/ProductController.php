@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\StockMovement;
+use App\Rules\NoSqlInjection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -34,9 +35,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'sku' => 'required|string|max:100|unique:products',
+            'name' => ['required', 'string', 'max:255', new NoSqlInjection],
+            'description' => ['nullable', 'string', new NoSqlInjection],
+            'sku' => ['required', 'string', 'max:100', new NoSqlInjection, 'unique:products'],
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
@@ -75,9 +76,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'sku' => 'required|string|max:100|unique:products,sku,' . $product->id,
+            'name' => ['required', 'string', 'max:255', new NoSqlInjection],
+            'description' => ['nullable', 'string', new NoSqlInjection],
+            'sku' => ['required', 'string', 'max:100', new NoSqlInjection, 'unique:products,sku,' . $product->id],
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
@@ -111,7 +112,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'change' => 'required|integer',
-            'reason' => 'nullable|string|max:255',
+            'reason' => ['nullable', 'string', 'max:255', new NoSqlInjection],
         ]);
 
         $product->stock_quantity += $validated['change'];

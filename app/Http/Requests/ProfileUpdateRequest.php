@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Rules\NoSqlInjection;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -17,8 +18,8 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['nullable', 'string', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'name' => ['required', 'string', 'max:255', new NoSqlInjection],
+            'username' => ['nullable', 'string', 'max:255', new NoSqlInjection, Rule::unique(User::class)->ignore($this->user()->id)],
             'email' => [
                 'required',
                 'string',

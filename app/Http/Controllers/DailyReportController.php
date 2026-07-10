@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DailyProductReport;
 use App\Models\Product;
+use App\Rules\NoSqlInjection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -21,7 +22,7 @@ class DailyReportController extends Controller
             'report_date' => 'required|date',
             'quantity_sold' => 'required|integer|min:1',
             'selling_price' => 'required|numeric|min:0',
-            'notes' => 'nullable|string|max:500',
+            'notes' => ['nullable', 'string', 'max:500', new NoSqlInjection],
             'payment_method' => 'required|in:cash,mobile_money',
         ]);
 
@@ -45,7 +46,7 @@ class DailyReportController extends Controller
             'report_date' => 'required|date',
             'quantity_sold' => 'required|integer|min:1',
             'selling_price' => 'required|numeric|min:0',
-            'notes' => 'nullable|string|max:500',
+            'notes' => ['nullable', 'string', 'max:500', new NoSqlInjection],
             'payment_method' => 'required|in:cash,mobile_money',
         ]);
 

@@ -12,7 +12,7 @@
 
             <div class="relative">
                 <x-text-input id="password" class="block mt-1 w-full pr-10"
-                                :type="show ? 'text' : 'password'"
+                                x-bind:type="show ? 'text' : 'password'"
                                 name="password"
                                 required autocomplete="current-password" />
                 <button type="button" @click="show = !show" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Rules\NoSqlInjection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -23,8 +24,8 @@ class CategoryController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories',
-            'description' => 'nullable|string',
+            'name' => ['required', 'string', 'max:255', new NoSqlInjection, 'unique:categories'],
+            'description' => ['nullable', 'string', new NoSqlInjection],
         ]);
 
         Category::create($validated);
@@ -40,8 +41,8 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
-            'description' => 'nullable|string',
+            'name' => ['required', 'string', 'max:255', new NoSqlInjection, 'unique:categories,name,' . $category->id],
+            'description' => ['nullable', 'string', new NoSqlInjection],
         ]);
 
         $category->update($validated);
