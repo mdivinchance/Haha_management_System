@@ -15,6 +15,7 @@ class DailyReportTest extends TestCase
 
     private User $user;
     private Product $product;
+    private array $defaultPayload;
 
     protected function setUp(): void
     {
@@ -24,6 +25,14 @@ class DailyReportTest extends TestCase
         $this->product = Product::factory()->create([
             'category_id' => Category::factory()->create()->id,
         ]);
+
+        $this->defaultPayload = [
+            'report_date' => '2026-07-08',
+            'quantity_sold' => 3,
+            'selling_price' => 25.00,
+            'payment_method' => 'cash',
+            'notes' => 'Sold well today',
+        ];
     }
 
     public function test_guest_cannot_view_report_form(): void
@@ -44,12 +53,7 @@ class DailyReportTest extends TestCase
     public function test_authenticated_user_can_create_daily_report(): void
     {
         $response = $this->actingAs($this->user)
-            ->post(route('daily-reports.store', $this->product), [
-                'report_date' => '2026-07-08',
-                'quantity_sold' => 3,
-                'selling_price' => 25.00,
-                'notes' => 'Sold well today',
-            ]);
+            ->post(route('daily-reports.store', $this->product), $this->defaultPayload);
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(route('products.show', $this->product));
@@ -59,6 +63,7 @@ class DailyReportTest extends TestCase
             'quantity_sold' => 3,
             'selling_price' => 25.00,
             'total_revenue' => 75.00,
+            'payment_method' => 'cash',
             'notes' => 'Sold well today',
         ]);
     }
@@ -70,6 +75,7 @@ class DailyReportTest extends TestCase
                 'report_date' => '2026-07-08',
                 'quantity_sold' => 5,
                 'selling_price' => 10.50,
+                'payment_method' => 'mobile_money',
             ]);
 
         $this->assertDatabaseHas('daily_product_reports', [
@@ -87,6 +93,7 @@ class DailyReportTest extends TestCase
                 'report_date' => '2026-07-08',
                 'quantity_sold' => 3,
                 'selling_price' => 25.00,
+                'payment_method' => 'cash',
             ]);
 
         $this->actingAs($this->user)
@@ -94,12 +101,15 @@ class DailyReportTest extends TestCase
                 'report_date' => '2026-07-09',
                 'quantity_sold' => 3,
                 'selling_price' => 30.00,
+                'payment_method' => 'mobile_money',
             ]);
 
         $reports = $this->product->fresh()->dailyReports()->orderBy('report_date')->get();
         $this->assertCount(2, $reports);
         $this->assertEquals(75.00, $reports[0]->total_revenue);
         $this->assertEquals(90.00, $reports[1]->total_revenue);
+        $this->assertEquals('cash', $reports[0]->payment_method);
+        $this->assertEquals('mobile_money', $reports[1]->payment_method);
     }
 
     public function test_authenticated_user_can_edit_report(): void
@@ -110,6 +120,7 @@ class DailyReportTest extends TestCase
             'quantity_sold' => 3,
             'selling_price' => 25.00,
             'total_revenue' => 75.00,
+            'payment_method' => 'cash',
         ]);
 
         $response = $this->actingAs($this->user)
@@ -117,6 +128,7 @@ class DailyReportTest extends TestCase
                 'report_date' => '2026-07-08',
                 'quantity_sold' => 5,
                 'selling_price' => 20.00,
+                'payment_method' => 'mobile_money',
                 'notes' => 'Updated',
             ]);
 
@@ -128,6 +140,7 @@ class DailyReportTest extends TestCase
             'quantity_sold' => 5,
             'selling_price' => 20.00,
             'total_revenue' => 100.00,
+            'payment_method' => 'mobile_money',
             'notes' => 'Updated',
         ]);
     }
@@ -140,6 +153,7 @@ class DailyReportTest extends TestCase
             'quantity_sold' => 3,
             'selling_price' => 25.00,
             'total_revenue' => 75.00,
+            'payment_method' => 'cash',
         ]);
 
         $this->actingAs($this->user)
@@ -156,6 +170,7 @@ class DailyReportTest extends TestCase
             'quantity_sold' => 3,
             'selling_price' => 25.00,
             'total_revenue' => 75.00,
+            'payment_method' => 'cash',
         ]);
 
         $response = $this->actingAs($this->user)
@@ -172,8 +187,9 @@ class DailyReportTest extends TestCase
                 'report_date' => '',
                 'quantity_sold' => -1,
                 'selling_price' => -5,
+                'payment_method' => '',
             ]);
 
-        $response->assertSessionHasErrors(['report_date', 'quantity_sold', 'selling_price']);
+        $response->assertSessionHasErrors(['report_date', 'quantity_sold', 'selling_price', 'payment_method']);
     }
 }

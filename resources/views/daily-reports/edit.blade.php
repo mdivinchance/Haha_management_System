@@ -37,7 +37,7 @@
                 </div>
 
                 <div>
-                    <label for="selling_price" class="form-label">Selling Price ($)</label>
+                    <label for="selling_price" class="form-label">Selling Price (FRW)</label>
                     <input id="selling_price" type="number" step="0.01" min="0"
                            name="selling_price"
                            value="{{ old('selling_price', $dailyReport->selling_price) }}" required
@@ -49,6 +49,15 @@
                 <div>
                     <label class="form-label">Total Revenue</label>
                     <p class="text-2xl font-bold text-teal-400" x-text="'FRW ' + total.toFixed(2)">FRW 0.00</p>
+                </div>
+
+                <div>
+                    <label for="payment_method" class="form-label">Payment Method</label>
+                    <select id="payment_method" name="payment_method" required class="input-field">
+                        <option value="cash" {{ old('payment_method', $dailyReport->payment_method) == 'cash' ? 'selected' : '' }}>Cash</option>
+                        <option value="mobile_money" {{ old('payment_method', $dailyReport->payment_method) == 'mobile_money' ? 'selected' : '' }}>Momo</option>
+                    </select>
+                    @error('payment_method') <p class="form-error">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="sm:col-span-2">

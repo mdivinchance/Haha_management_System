@@ -17,6 +17,7 @@ class DailyProductReport extends Model
         'selling_price',
         'total_revenue',
         'notes',
+        'payment_method',
     ];
 
     protected function casts(): array

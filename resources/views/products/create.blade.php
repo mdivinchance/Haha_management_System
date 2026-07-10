@@ -108,13 +108,13 @@
                 </div>
 
                 <div>
-                    <label for="purchase_price" class="form-label">Purchase Price ($)</label>
+                    <label for="purchase_price" class="form-label">Purchase Price (FRW)</label>
                     <input id="purchase_price" type="number" step="0.01" name="purchase_price" value="{{ old('purchase_price') }}" required class="input-field" placeholder="0.00">
                     @error('purchase_price') <p class="form-error">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
-                    <label for="selling_price" class="form-label">Selling Price ($)</label>
+                    <label for="selling_price" class="form-label">Selling Price (FRW)</label>
                     <input id="selling_price" type="number" step="0.01" name="selling_price" value="{{ old('selling_price') }}" required class="input-field" placeholder="0.00">
                     @error('selling_price') <p class="form-error">{{ $message }}</p> @enderror
                 </div>

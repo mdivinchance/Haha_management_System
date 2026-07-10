@@ -31,24 +31,24 @@
         </form>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="stat-card">
-                <span class="stat-label">Total Revenue</span>
+            <div class="stat-card border-t-2 border-teal-500">
+                <span class="stat-label">Total Money Worked</span>
                 <span class="stat-value text-teal-400">FRW {{ number_format($totals->total_revenue, 2) }}</span>
             </div>
-            <div class="stat-card">
+            <div class="stat-card border-t-2 border-blue-500">
                 <span class="stat-label">Total Items Sold</span>
                 <span class="stat-value text-blue-400">{{ $totals->total_quantity }}</span>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Report Entries</span>
+            <div class="stat-card border-t-2 border-purple-500">
+                <span class="stat-label">Total Report Entries</span>
                 <span class="stat-value text-purple-400">{{ $totals->report_count }}</span>
             </div>
         </div>
 
         @if ($dailySummary->isNotEmpty())
-            <div class="panel overflow-hidden">
-                <div class="px-5 py-3 border-b border-neutral-800">
-                    <h2 class="text-sm font-semibold text-white">Daily Summary</h2>
+            <div class="panel overflow-hidden border-t-2 border-teal-500">
+                <div class="px-5 py-4 border-b border-neutral-800 bg-neutral-900">
+                    <h2 class="text-base font-bold text-teal-400">Money Worked Per Day</h2>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
@@ -57,7 +57,7 @@
                                 <th class="text-left px-5 py-3">Date</th>
                                 <th class="text-right px-5 py-3">Items Sold</th>
                                 <th class="text-right px-5 py-3">Reports</th>
-                                <th class="text-right px-5 py-3">Revenue</th>
+                                <th class="text-right px-5 py-3">Total Money Worked</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-neutral-800">
@@ -66,7 +66,7 @@
                                     <td class="px-5 py-3 text-white font-medium">{{ $day->date->format('M d, Y') }}</td>
                                     <td class="px-5 py-3 text-right text-gray-300">{{ $day->total_quantity }}</td>
                                     <td class="px-5 py-3 text-right text-gray-400">{{ $day->count }}</td>
-                                    <td class="px-5 py-3 text-right text-teal-400 font-semibold">FRW {{ number_format($day->total_revenue, 2) }}</td>
+                                    <td class="px-5 py-3 text-right text-teal-400 font-bold text-base">FRW {{ number_format($day->total_revenue, 2) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -76,7 +76,7 @@
 
             <div class="panel overflow-hidden">
                 <div class="px-5 py-3 border-b border-neutral-800">
-                    <h2 class="text-sm font-semibold text-white">All Reports</h2>
+                    <h2 class="text-sm font-semibold text-white">All Report Details</h2>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
@@ -87,6 +87,7 @@
                                 <th class="text-right px-5 py-3">Qty</th>
                                 <th class="text-right px-5 py-3">Price</th>
                                 <th class="text-right px-5 py-3">Revenue</th>
+                                <th class="text-left px-5 py-3">Payment</th>
                                 <th class="text-left px-5 py-3">Notes</th>
                             </tr>
                         </thead>
@@ -100,11 +101,12 @@
                                     <td class="px-5 py-3 text-right text-gray-300">{{ $report->quantity_sold }}</td>
                                     <td class="px-5 py-3 text-right text-gray-300">FRW {{ number_format($report->selling_price, 2) }}</td>
                                     <td class="px-5 py-3 text-right text-teal-400 font-semibold">FRW {{ number_format($report->total_revenue, 2) }}</td>
+                                    <td class="px-5 py-3 text-gray-400 text-xs">{{ $report->payment_method === 'mobile_money' ? 'Momo' : 'Cash' }}</td>
                                     <td class="px-5 py-3 text-gray-500 max-w-xs truncate">{{ $report->notes ?: '—' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-5 py-8 text-center text-gray-500">No reports found matching your filters.</td>
+                                    <td colspan="7" class="px-5 py-8 text-center text-gray-500">No reports found matching your filters.</td>
                                 </tr>
                             @endforelse
                         </tbody>
