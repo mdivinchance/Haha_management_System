@@ -1,11 +1,11 @@
 <x-app-layout>
     <div class="p-6 max-w-2xl">
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-white">Edit Product</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Edit Product</h1>
             <p class="text-gray-500 text-sm mt-1">{{ $product->name }}</p>
         </div>
 
-        <form method="POST" action="{{ route('products.update', $product) }}" enctype="multipart/form-data" class="bg-neutral-900 rounded-xl p-6 space-y-5"
+        <form method="POST" action="{{ route('products.update', $product) }}" enctype="multipart/form-data" class="bg-gray-100 dark:bg-neutral-900 rounded-xl p-6 space-y-5"
               x-data="{
                 imageSource: 'file',
                 previewUrl: '{{ $product->image_path ? Storage::url($product->image_path) : '' }}',
@@ -139,21 +139,21 @@
 
                     <div class="flex gap-2 mb-3">
                         <button type="button" @click="switchSource('file')"
-                                :class="imageSource === 'file' ? 'bg-teal-500/20 text-teal-400 border-teal-500' : 'bg-neutral-800 text-neutral-400 border-neutral-700'"
+                                :class="imageSource === 'file' ? 'bg-teal-500/20 text-teal-400 border-teal-500' : 'bg-gray-200 text-gray-500 border-gray-300 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700'"
                                 class="flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors">Upload File</button>
                         <button type="button" @click="switchSource('camera')"
-                                :class="imageSource === 'camera' ? 'bg-teal-500/20 text-teal-400 border-teal-500' : 'bg-neutral-800 text-neutral-400 border-neutral-700'"
+                                :class="imageSource === 'camera' ? 'bg-teal-500/20 text-teal-400 border-teal-500' : 'bg-gray-200 text-gray-500 border-gray-300 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700'"
                                 class="flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors">Use Camera</button>
                     </div>
 
                     <div x-show="imageSource === 'file'" class="space-y-3">
                         <input id="image_file" type="file" name="image" accept="image/*"
                                @change="onFileSelect"
-                               class="block w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                               class="block w-full text-sm text-gray-500 dark:text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
                     </div>
 
                     <div x-show="imageSource === 'camera'" x-cloak class="space-y-3">
-                        <div class="rounded-lg overflow-hidden bg-neutral-800 border border-neutral-700">
+                        <div class="rounded-lg overflow-hidden bg-gray-200 border border-gray-300 dark:bg-neutral-800 dark:border-neutral-700">
                             <video x-ref="video" autoplay playsinline class="w-full max-h-64 object-cover"></video>
                         </div>
                         <template x-if="cameras.length > 1">
@@ -167,13 +167,13 @@
                         <div class="flex gap-2">
                             <button type="button" @click="capturePhoto" class="btn-primary text-sm flex-1">Capture Photo</button>
                             <button type="button" @click="switchCamera" x-show="cameras.length > 1"
-                                    class="flex-1 rounded-lg border border-neutral-700 bg-neutral-800 text-neutral-400 px-4 py-2 text-sm font-medium hover:text-white transition-colors">Switch</button>
+                                    class="flex-1 rounded-lg border border-gray-300 bg-gray-200 text-gray-500 px-4 py-2 text-sm font-medium hover:text-gray-900 transition-colors dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:text-white">Switch</button>
                         </div>
                     </div>
 
                     <template x-if="previewUrl">
                         <div class="mt-3 relative inline-block">
-                            <img :src="previewUrl" class="max-h-40 rounded-lg border border-neutral-700">
+                            <img :src="previewUrl" class="max-h-40 rounded-lg border border-gray-300 dark:border-neutral-700">
                             <button type="button" @click="removeImage"
                                     class="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-400">&times;</button>
                         </div>
@@ -181,7 +181,7 @@
 
                     <template x-if="!previewUrl && hasExistingImage">
                         <div class="mt-3 relative inline-block">
-                            <img src="{{ Storage::url($product->image_path) }}" class="max-h-40 rounded-lg border border-neutral-700">
+                            <img src="{{ Storage::url($product->image_path) }}" class="max-h-40 rounded-lg border border-gray-300 dark:border-neutral-700">
                         </div>
                     </template>
 
@@ -192,7 +192,7 @@
 
             <div class="flex items-center gap-3 pt-2">
                 <button type="submit" class="btn-primary">Update Product</button>
-                <a href="{{ route('products.index') }}" class="text-sm text-neutral-400 hover:text-neutral-300">Cancel</a>
+                <a href="{{ route('products.index') }}" class="text-sm text-gray-500 hover:text-gray-700 dark:text-neutral-400 dark:hover:text-neutral-300">Cancel</a>
             </div>
         </form>
     </div>

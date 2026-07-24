@@ -12,11 +12,11 @@
 
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-white">Products</h1>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Products</h1>
                 <p class="text-gray-500 text-sm mt-1">Manage your inventory and stock</p>
             </div>
             <div class="flex items-center gap-3">
-                <button @click="toggleView" class="text-sm text-neutral-400 hover:text-white transition-colors" :title="viewMode === 'table' ? 'Switch to grid view' : 'Switch to table view'">
+                <button @click="toggleView" class="text-sm text-gray-500 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors" :title="viewMode === 'table' ? 'Switch to grid view' : 'Switch to table view'">
                     <template x-if="viewMode === 'table'">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                     </template>
@@ -44,9 +44,9 @@
                             <th class="text-right px-5 py-3">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800">
+                    <tbody class="divide-y divide-gray-200 dark:divide-neutral-800">
                         @forelse ($products as $product)
-                            <tr class="hover:bg-neutral-800/50">
+                            <tr class="hover:bg-gray-100 dark:hover:bg-neutral-800/50">
                                 <td class="px-5 py-3">
                                     <div class="flex items-center gap-3">
                                         @if ($product->image_path)
@@ -57,21 +57,21 @@
                                                      class="w-10 h-10 object-cover transition-transform duration-200 group-hover:scale-[3] group-hover:z-10">
                                             </div>
                                         @else
-                                            <div class="w-10 h-10 rounded-lg bg-neutral-800 flex items-center justify-center text-gray-500 flex-shrink-0">
+                                            <div class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-neutral-800 flex items-center justify-center text-gray-500 flex-shrink-0">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="text-white font-medium">{{ $product->name }}</div>
-                                            <div class="text-xs text-gray-600">{{ Str::limit($product->description, 40) }}</div>
+                                            <div class="text-gray-900 dark:text-white font-medium">{{ $product->name }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-600">{{ Str::limit($product->description, 40) }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-5 py-3 text-gray-400">{{ $product->category->name ?? '—' }}</td>
-                                <td class="px-5 py-3 text-gray-400 font-mono text-xs">{{ $product->sku }}</td>
-                                <td class="px-5 py-3 text-right text-gray-300">FRW {{ number_format($product->selling_price, 2) }}</td>
+                                <td class="px-5 py-3 text-gray-500 dark:text-gray-400">{{ $product->category->name ?? '—' }}</td>
+                                <td class="px-5 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">{{ $product->sku }}</td>
+                                <td class="px-5 py-3 text-right text-gray-700 dark:text-gray-300">FRW {{ number_format($product->selling_price, 2) }}</td>
                                 <td class="px-5 py-3 text-right">
-                                    <span class="{{ $product->isLowStock() ? 'text-orange-400 font-semibold' : ($product->stock_quantity == 0 ? 'text-red-400 font-semibold' : 'text-gray-300') }}">
+                                    <span class="{{ $product->isLowStock() ? 'text-orange-400 font-semibold' : ($product->stock_quantity == 0 ? 'text-red-400 font-semibold' : 'text-gray-700 dark:text-gray-300') }}">
                                         {{ $product->stock_quantity }}
                                     </span>
                                 </td>
@@ -82,7 +82,7 @@
                                             <input type="hidden" name="change" value="-1">
                                             <button type="submit" class="text-gray-500 hover:text-orange-400 p-1" title="Decrease stock">−</button>
                                         </form>
-                                        <span class="text-xs text-gray-600 w-4 text-center font-mono">{{ $product->stock_quantity }}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-600 w-4 text-center font-mono">{{ $product->stock_quantity }}</span>
                                         <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
                                             @csrf @method('PATCH')
                                             <input type="hidden" name="change" value="1">
@@ -115,37 +115,37 @@
 
         <div x-show="viewMode === 'grid'" x-cloak class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             @forelse ($products as $product)
-                <div class="panel overflow-hidden group cursor-pointer" @click="openLightbox('{{ $product->image_path ? Storage::url($product->image_path) : '' }}')">
-                    <div class="relative overflow-hidden rounded-lg mb-3 bg-neutral-800 aspect-square">
+                <div class="panel overflow-hidden group cursor-pointer" @if($product->image_path) @click="openLightbox('{{ Storage::url($product->image_path) }}')" @endif>
+                    <div class="relative overflow-hidden rounded-lg mb-3 bg-gray-200 dark:bg-neutral-800 aspect-square">
                         @if ($product->image_path)
                             <img src="{{ Storage::url($product->image_path) }}" alt=""
                                  class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-150">
                         @else
-                            <div class="w-full h-full flex items-center justify-center text-neutral-600">
+                            <div class="w-full h-full flex items-center justify-center text-gray-400 dark:text-neutral-600">
                                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             </div>
                         @endif
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
                     </div>
-                    <p class="text-sm font-medium text-white truncate">{{ $product->name }}</p>
-                    <p class="text-xs text-neutral-500 mt-0.5">FRW {{ number_format($product->selling_price, 2) }}</p>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $product->name }}</p>
+                    <p class="text-xs text-gray-500 dark:text-neutral-500 mt-0.5">FRW {{ number_format($product->selling_price, 2) }}</p>
                     <div class="flex items-center justify-between mt-2">
                         <span class="text-xs {{ $product->isLowStock() ? 'text-orange-400' : ($product->stock_quantity == 0 ? 'text-red-400' : 'text-green-400') }}">
                             {{ $product->stock_quantity }} in stock
                         </span>
                         <div class="flex items-center gap-1" @click.stop>
-                            <a href="{{ route('products.show', $product) }}" class="text-neutral-500 hover:text-teal-400 p-1 text-xs" title="Take Report">
+                            <a href="{{ route('products.show', $product) }}" class="text-gray-500 dark:text-neutral-500 hover:text-teal-400 p-1 text-xs" title="Take Report">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </a>
                             <form action="{{ route('products.adjust-stock', $product) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="change" value="-1">
-                                <button type="submit" class="text-neutral-500 hover:text-orange-400 text-sm px-1">−</button>
+                                <button type="submit" class="text-gray-500 dark:text-neutral-500 hover:text-orange-400 text-sm px-1">−</button>
                             </form>
                             <form action="{{ route('products.adjust-stock', $product) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="change" value="1">
-                                <button type="submit" class="text-neutral-500 hover:text-teal-400 text-sm px-1">+</button>
+                                <button type="submit" class="text-gray-500 dark:text-neutral-500 hover:text-teal-400 text-sm px-1">+</button>
                             </form>
                         </div>
                     </div>
@@ -165,7 +165,7 @@
                      x-transition:enter-start="opacity-0 scale-95"
                      x-transition:enter-end="opacity-100 scale-100">
                 <button @click="closeLightbox()"
-                        class="absolute top-4 right-4 h-8 w-8 rounded-full bg-neutral-800/80 text-white flex items-center justify-center hover:bg-neutral-700">&times;</button>
+                        class="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-200/80 dark:bg-neutral-800/80 text-gray-900 dark:text-white flex items-center justify-center hover:bg-gray-300 dark:hover:bg-neutral-700">&times;</button>
             </div>
         </template>
     </div>

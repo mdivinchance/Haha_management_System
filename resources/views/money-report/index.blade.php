@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="p-6 space-y-6">
         <div>
-            <h1 class="text-2xl font-bold text-white">Money Report</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Money Report</h1>
             <p class="text-gray-500 text-sm mt-1">Daily revenue and sales summary</p>
         </div>
 
@@ -47,7 +47,7 @@
 
         @if ($dailySummary->isNotEmpty())
             <div class="panel overflow-hidden border-t-2 border-teal-500">
-                <div class="px-5 py-4 border-b border-neutral-800 bg-neutral-900">
+                <div class="px-5 py-4 border-b border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900">
                     <h2 class="text-base font-bold text-teal-400">Money Worked Per Day</h2>
                 </div>
                 <div class="overflow-x-auto">
@@ -60,12 +60,12 @@
                                 <th class="text-right px-5 py-3">Total Money Worked</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-neutral-800">
+                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-800">
                             @foreach ($dailySummary as $day)
-                                <tr class="hover:bg-neutral-800/50">
-                                    <td class="px-5 py-3 text-white font-medium">{{ $day->date->format('M d, Y') }}</td>
-                                    <td class="px-5 py-3 text-right text-gray-300">{{ $day->total_quantity }}</td>
-                                    <td class="px-5 py-3 text-right text-gray-400">{{ $day->count }}</td>
+                                <tr class="hover:bg-gray-100 dark:hover:bg-neutral-800/50">
+                                    <td class="px-5 py-3 text-gray-900 dark:text-white font-medium">{{ $day->date->format('M d, Y') }}</td>
+                                    <td class="px-5 py-3 text-right text-gray-700 dark:text-gray-300">{{ $day->total_quantity }}</td>
+                                    <td class="px-5 py-3 text-right text-gray-500 dark:text-gray-400">{{ $day->count }}</td>
                                     <td class="px-5 py-3 text-right text-teal-400 font-bold text-base">FRW {{ number_format($day->total_revenue, 2) }}</td>
                                 </tr>
                             @endforeach
@@ -75,8 +75,8 @@
             </div>
 
             <div class="panel overflow-hidden">
-                <div class="px-5 py-3 border-b border-neutral-800">
-                    <h2 class="text-sm font-semibold text-white">All Report Details</h2>
+                <div class="px-5 py-3 border-b border-gray-200 dark:border-neutral-800">
+                    <h2 class="text-sm font-semibold text-gray-900 dark:text-white">All Report Details</h2>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
@@ -91,17 +91,17 @@
                                 <th class="text-left px-5 py-3">Notes</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-neutral-800">
+                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-800">
                             @forelse ($reports as $report)
-                                <tr class="hover:bg-neutral-800/50">
-                                    <td class="px-5 py-3 text-gray-300">{{ $report->report_date->format('M d, Y') }}</td>
+                                <tr class="hover:bg-gray-100 dark:hover:bg-neutral-800/50">
+                                    <td class="px-5 py-3 text-gray-700 dark:text-gray-300">{{ $report->report_date->format('M d, Y') }}</td>
                                     <td class="px-5 py-3">
-                                        <a href="{{ route('products.show', $report->product) }}" class="text-white font-medium hover:text-teal-400">{{ $report->product->name }}</a>
+                                        <a href="{{ route('products.show', $report->product) }}" class="text-gray-900 dark:text-white font-medium hover:text-teal-400">{{ $report->product->name }}</a>
                                     </td>
-                                    <td class="px-5 py-3 text-right text-gray-300">{{ $report->quantity_sold }}</td>
-                                    <td class="px-5 py-3 text-right text-gray-300">FRW {{ number_format($report->selling_price, 2) }}</td>
+                                    <td class="px-5 py-3 text-right text-gray-700 dark:text-gray-300">{{ $report->quantity_sold }}</td>
+                                    <td class="px-5 py-3 text-right text-gray-700 dark:text-gray-300">FRW {{ number_format($report->selling_price, 2) }}</td>
                                     <td class="px-5 py-3 text-right text-teal-400 font-semibold">FRW {{ number_format($report->total_revenue, 2) }}</td>
-                                    <td class="px-5 py-3 text-gray-400 text-xs">{{ $report->payment_method === 'mobile_money' ? 'Momo' : 'Cash' }}</td>
+                                    <td class="px-5 py-3 text-gray-500 dark:text-gray-400 text-xs">{{ $report->payment_method === 'mobile_money' ? 'Momo' : 'Cash' }}</td>
                                     <td class="px-5 py-3 text-gray-500 max-w-xs truncate">{{ $report->notes ?: '—' }}</td>
                                 </tr>
                             @empty

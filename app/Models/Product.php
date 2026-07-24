@@ -33,6 +33,14 @@ class Product extends Model
         return $this->hasMany(DailyProductReport::class);
     }
 
+    protected function casts(): array
+    {
+        return [
+            'purchase_price' => 'decimal:2',
+            'selling_price' => 'decimal:2',
+        ];
+    }
+
     public function isLowStock(): bool
     {
         return $this->stock_quantity <= $this->low_stock_threshold;

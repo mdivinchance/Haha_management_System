@@ -13,6 +13,10 @@ class MoneyReportController extends Controller
     {
         $query = DailyProductReport::with('product');
 
+        if (!auth()->user()->isSuperAdmin()) {
+            $query->where('user_id', auth()->id());
+        }
+
         if ($request->filled('date_from')) {
             $query->where('report_date', '>=', $request->date_from);
         }

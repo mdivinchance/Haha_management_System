@@ -1,7 +1,7 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-white">Profile Information</h2>
-        <p class="mt-1 text-sm text-neutral-400">Update your account's profile information and email address.</p>
+        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Profile Information</h2>
+        <p class="mt-1 text-sm text-gray-500 dark:text-neutral-400">Update your account's profile information and email address.</p>
     </header>
 
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-5">

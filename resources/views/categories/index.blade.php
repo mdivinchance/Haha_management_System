@@ -2,7 +2,7 @@
     <div class="p-6 space-y-6">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-white">Categories</h1>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Categories</h1>
                 <p class="text-gray-500 text-sm mt-1">Manage your product types</p>
             </div>
             <a href="{{ route('categories.create') }}" class="inline-flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors">
@@ -11,7 +11,7 @@
             </a>
         </div>
 
-        <div class="bg-neutral-900 rounded-xl overflow-hidden">
+        <div class="bg-gray-100 dark:bg-neutral-900 rounded-xl overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
@@ -22,17 +22,17 @@
                             <th class="text-right px-5 py-3">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800">
+                    <tbody class="divide-y divide-gray-200 dark:divide-neutral-800">
                         @forelse ($categories as $category)
-                            <tr class="hover:bg-neutral-800/50">
-                                <td class="px-5 py-3 text-white font-medium">{{ $category->name }}</td>
-                                <td class="px-5 py-3 text-gray-400">{{ $category->description ?? '—' }}</td>
-                                <td class="px-5 py-3 text-center text-gray-300">{{ $category->products_count }}</td>
+                            <tr class="hover:bg-gray-100 dark:hover:bg-neutral-800/50">
+                                <td class="px-5 py-3 text-gray-900 dark:text-white font-medium">{{ $category->name }}</td>
+                                <td class="px-5 py-3 text-gray-500 dark:text-gray-400">{{ $category->description ?? '—' }}</td>
+                                <td class="px-5 py-3 text-center text-gray-700 dark:text-gray-300">{{ $category->products_count }}</td>
                                 <td class="px-5 py-3 text-right">
-                                    <a href="{{ route('categories.edit', $category) }}" class="text-gray-400 hover:text-teal-400 text-xs font-medium mr-3">Edit</a>
+                                    <a href="{{ route('categories.edit', $category) }}" class="text-gray-500 hover:text-teal-500 dark:text-gray-400 dark:hover:text-teal-400 text-xs font-medium mr-3">Edit</a>
                                     <form action="{{ route('categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Delete this category?')">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="text-gray-400 hover:text-red-400 text-xs font-medium">Delete</button>
+                                        <button type="submit" class="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 text-xs font-medium">Delete</button>
                                     </form>
                                 </td>
                             </tr>

@@ -28,6 +28,7 @@ class DailyReportController extends Controller
 
         $validated['total_revenue'] = $validated['quantity_sold'] * $validated['selling_price'];
         $validated['product_id'] = $product->id;
+        $validated['user_id'] = auth()->id();
 
         DailyProductReport::create($validated);
 
@@ -37,11 +38,15 @@ class DailyReportController extends Controller
 
     public function edit(Product $product, DailyProductReport $dailyReport): View
     {
+        abort_if($dailyReport->product_id !== $product->id, 404);
+
         return view('daily-reports.edit', compact('product', 'dailyReport'));
     }
 
     public function update(Request $request, Product $product, DailyProductReport $dailyReport): RedirectResponse
     {
+        abort_if($dailyReport->product_id !== $product->id, 404);
+
         $validated = $request->validate([
             'report_date' => 'required|date',
             'quantity_sold' => 'required|integer|min:1',
@@ -60,6 +65,8 @@ class DailyReportController extends Controller
 
     public function destroy(Product $product, DailyProductReport $dailyReport): RedirectResponse
     {
+        abort_if($dailyReport->product_id !== $product->id, 404);
+
         $dailyReport->delete();
 
         return redirect()->route('products.show', $product)

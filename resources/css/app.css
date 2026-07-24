@@ -6,33 +6,33 @@
 
 @layer base {
     body {
-        @apply bg-neutral-950 text-white antialiased;
+        @apply bg-gray-50 text-gray-900 antialiased dark:bg-neutral-950 dark:text-white;
     }
 }
 
 @layer components {
     .stat-card {
-        @apply rounded-lg border-t-4 bg-neutral-900 p-5;
+        @apply rounded-lg border-t-4 p-5 bg-white dark:bg-neutral-900;
     }
 
     .panel {
-        @apply rounded-lg bg-neutral-900 p-5;
+        @apply rounded-lg p-5 bg-white dark:bg-neutral-900;
     }
 
     .btn-primary {
-        @apply rounded-lg bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 focus:ring-offset-neutral-900;
+        @apply rounded-lg bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2;
     }
 
     .btn-danger {
-        @apply rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-neutral-900;
+        @apply rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
     }
 
     .input-field {
-        @apply w-full rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white placeholder-neutral-500 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500;
+        @apply w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-500;
     }
 
     .form-label {
-        @apply mb-1 block text-xs font-medium text-neutral-400;
+        @apply mb-1 block text-xs font-medium text-gray-600 dark:text-neutral-400;
     }
 
     .form-error {
@@ -40,10 +40,10 @@
     }
 
     .sidebar-link {
-        @apply flex flex-col border-l-[3px] border-transparent px-6 py-3 text-sm transition-colors hover:bg-neutral-800/50;
+        @apply flex flex-col border-l-[3px] border-transparent px-6 py-3 text-sm transition-colors hover:bg-gray-100 dark:hover:bg-neutral-800/50 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white;
     }
 
     .sidebar-link-active {
-        @apply border-l-teal-400 bg-neutral-800 text-white;
+        @apply border-l-teal-400 bg-gray-100 text-gray-900 dark:bg-neutral-800 dark:text-white;
     }
 }

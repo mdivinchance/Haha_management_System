@@ -93,7 +93,18 @@ class ProductController extends Controller
         }
 
         unset($validated['image'], $validated['camera_image']);
+
+        $stockChange = $validated['stock_quantity'] - $product->stock_quantity;
+
         $product->update($validated);
+
+        if ($stockChange !== 0) {
+            StockMovement::create([
+                'product_id' => $product->id,
+                'change_amount' => $stockChange,
+                'reason' => 'Stock updated via edit',
+            ]);
+        }
 
         return redirect()->route('products.index')->with('success', 'Product updated.');
     }

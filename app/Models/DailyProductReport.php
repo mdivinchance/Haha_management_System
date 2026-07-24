@@ -12,6 +12,7 @@ class DailyProductReport extends Model
 
     protected $fillable = [
         'product_id',
+        'user_id',
         'report_date',
         'quantity_sold',
         'selling_price',
@@ -33,5 +34,10 @@ class DailyProductReport extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

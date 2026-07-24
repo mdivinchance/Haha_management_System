@@ -12,11 +12,11 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-white antialiased bg-neutral-950">
+    <body class="font-sans antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 px-4">
             <div class="mb-6 text-center">
                 <a href="/" class="text-3xl font-bold text-teal-400 tracking-tight">HAHA</a>
-                <p class="text-xs text-neutral-500 mt-1 tracking-widest uppercase">Inventory System</p>
+                <p class="text-xs text-gray-500 dark:text-neutral-500 mt-1 tracking-widest uppercase">Inventory System</p>
             </div>
 
             <div class="w-full sm:max-w-md">

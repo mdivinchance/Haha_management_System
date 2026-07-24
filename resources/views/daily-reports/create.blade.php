@@ -1,12 +1,12 @@
 <x-app-layout>
     <div class="p-6 max-w-2xl">
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-white">Daily Report</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Daily Report</h1>
             <p class="text-gray-500 text-sm mt-1">{{ $product->name }}</p>
         </div>
 
         <form method="POST" action="{{ route('daily-reports.store', $product) }}"
-              class="bg-neutral-900 rounded-xl p-6 space-y-5"
+              class="bg-gray-100 dark:bg-neutral-900 rounded-xl p-6 space-y-5"
               x-data="{
                 quantity: 1,
                 sellingPrice: '{{ old('selling_price', $product->selling_price) }}',
@@ -17,7 +17,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div class="sm:col-span-2">
                     <label class="form-label">Product</label>
-                    <p class="text-white font-medium">{{ $product->name }}</p>
+                    <p class="text-gray-900 dark:text-white font-medium">{{ $product->name }}</p>
                 </div>
 
                 <div>
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="notes" class="form-label">Notes <span class="text-neutral-500">(optional)</span></label>
+                    <label for="notes" class="form-label">Notes <span class="text-gray-500 dark:text-neutral-500">(optional)</span></label>
                     <textarea id="notes" name="notes" rows="2" class="input-field" placeholder="Any notes about this sale...">{{ old('notes') }}</textarea>
                     @error('notes') <p class="form-error">{{ $message }}</p> @enderror
                 </div>
@@ -69,7 +69,7 @@
 
             <div class="flex items-center gap-3 pt-2">
                 <button type="submit" class="btn-primary">Save Report</button>
-                <a href="{{ route('products.show', $product) }}" class="text-sm text-neutral-400 hover:text-neutral-300">Cancel</a>
+                <a href="{{ route('products.show', $product) }}" class="text-sm text-gray-500 hover:text-gray-700 dark:text-neutral-400 dark:hover:text-neutral-300">Cancel</a>
             </div>
         </form>
     </div>

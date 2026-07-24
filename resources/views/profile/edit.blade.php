@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="max-w-2xl space-y-6">
         <div class="mb-2">
-            <h1 class="text-2xl font-bold text-white">Settings</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
             <p class="text-gray-500 text-sm mt-1">Manage your profile and credentials</p>
         </div>
 
