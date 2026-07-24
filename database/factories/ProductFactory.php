@@ -13,6 +13,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => \App\Models\User::factory(),
             'category_id' => Category::factory(),
             'name' => fake()->words(3, true),
             'description' => fake()->sentence(),

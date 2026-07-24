@@ -8,26 +8,43 @@ use App\Models\StockMovement;
 use App\Rules\NoSqlInjection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    private function scopeQuery($query)
+    {
+        if (Auth::user()->isManager()) {
+            $query->where('user_id', Auth::id());
+        }
+        return $query;
+    }
+
     public function index(): View
     {
-        $products = Product::with('category')->latest()->get();
+        $products = $this->scopeQuery(Product::with('category'))->latest()->get();
         return view('products.index', compact('products'));
     }
 
     public function show(Product $product): View
     {
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id(), 403);
+        }
         $product->load('category', 'dailyReports');
         return view('products.show', compact('product'));
     }
 
     public function create(): View
     {
-        $categories = Category::all();
+        $query = Category::query();
+        if (Auth::user()->isManager()) {
+            $query->where('user_id', Auth::id());
+        }
+        $categories = $query->latest()->get();
         return view('products.create', compact('categories'));
     }
 
@@ -53,6 +70,7 @@ class ProductController extends Controller
 
         unset($validated['image'], $validated['camera_image']);
 
+        $validated['user_id'] = auth()->id();
         $product = Product::create($validated);
 
         if ($product->stock_quantity > 0) {
@@ -68,12 +86,22 @@ class ProductController extends Controller
 
     public function edit(Product $product): View
     {
-        $categories = Category::all();
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id(), 403);
+        }
+        $query = Category::query();
+        if (Auth::user()->isManager()) {
+            $query->where('user_id', Auth::id());
+        }
+        $categories = $query->latest()->get();
         return view('products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product): RedirectResponse
     {
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id(), 403);
+        }
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => ['required', 'string', 'max:255', new NoSqlInjection],
@@ -111,6 +139,9 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id(), 403);
+        }
         if ($product->image_path) {
             Storage::disk('public')->delete($product->image_path);
         }
@@ -121,6 +152,9 @@ class ProductController extends Controller
 
     public function adjustStock(Request $request, Product $product): RedirectResponse
     {
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id(), 403);
+        }
         $validated = $request->validate([
             'change' => 'required|integer',
             'reason' => ['nullable', 'string', 'max:255', new NoSqlInjection],

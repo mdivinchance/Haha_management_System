@@ -28,13 +28,13 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255', new NoSqlInjection],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:super_admin,manager'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+        $validated['role'] = 'manager';
         $validated['is_active'] = true;
 
-        User::create($validated);
+        $user = User::create($validated);
 
         return redirect()->route('users.index')->with('success', 'User created.');
     }
@@ -49,7 +49,6 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', new NoSqlInjection],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'role' => ['required', 'in:super_admin,manager'],
         ]);
 
         $user->update($validated);

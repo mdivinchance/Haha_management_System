@@ -1,7 +1,7 @@
 <x-app-layout>
-    <div class="p-6 max-w-2xl">
+    <div class="max-w-2xl">
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Edit Report</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Edit Report</h1>
             <p class="text-gray-500 text-sm mt-1">{{ $product->name }} — {{ $dailyReport->report_date->format('M d, Y') }}</p>
         </div>
 

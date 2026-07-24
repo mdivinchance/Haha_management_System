@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -10,6 +12,18 @@ Route::middleware('guest')->group(function () {
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+        ->name('password.request');
+
+    Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLink'])
+        ->name('password.email');
+
+    Route::get('change-password', [ResetPasswordController::class, 'showChangeForm'])
+        ->name('password.change-form');
+
+    Route::post('change-password', [ResetPasswordController::class, 'changePassword'])
+        ->name('password.change');
 });
 
 Route::middleware('auth')->group(function () {

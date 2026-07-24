@@ -10,7 +10,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    return redirect()->route('login');
 });
 
 Route::middleware(['auth', 'role:super_admin,manager'])->group(function () {

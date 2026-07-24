@@ -6,13 +6,20 @@ use App\Models\Category;
 use App\Rules\NoSqlInjection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     public function index(): View
     {
-        $categories = Category::withCount('products')->latest()->get();
+        $query = Category::withCount('products');
+
+        if (Auth::user()->isManager()) {
+            $query->where('user_id', Auth::id());
+        }
+
+        $categories = $query->latest()->get();
         return view('categories.index', compact('categories'));
     }
 
@@ -23,11 +30,22 @@ class CategoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $name = $request->input('name');
+
+        $query = Category::where('name', $name);
+        if (Auth::user()->isManager()) {
+            $query->where('user_id', Auth::id());
+        }
+        if ($query->exists()) {
+            return back()->withErrors(['name' => 'The category name has already been taken.'])->withInput();
+        }
+
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', new NoSqlInjection, 'unique:categories'],
+            'name' => ['required', 'string', 'max:255', new NoSqlInjection],
             'description' => ['nullable', 'string', new NoSqlInjection],
         ]);
 
+        $validated['user_id'] = Auth::id();
         Category::create($validated);
 
         return redirect()->route('categories.index')->with('success', 'Category created.');
@@ -35,13 +53,30 @@ class CategoryController extends Controller
 
     public function edit(Category $category): View
     {
+        if (Auth::user()->isManager()) {
+            abort_if($category->user_id !== Auth::id(), 403);
+        }
         return view('categories.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category): RedirectResponse
     {
+        if (Auth::user()->isManager()) {
+            abort_if($category->user_id !== Auth::id(), 403);
+        }
+
+        $name = $request->input('name');
+
+        $query = Category::where('name', $name)->where('id', '!=', $category->id);
+        if (Auth::user()->isManager()) {
+            $query->where('user_id', Auth::id());
+        }
+        if ($query->exists()) {
+            return back()->withErrors(['name' => 'The category name has already been taken.'])->withInput();
+        }
+
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', new NoSqlInjection, 'unique:categories,name,' . $category->id],
+            'name' => ['required', 'string', 'max:255', new NoSqlInjection],
             'description' => ['nullable', 'string', new NoSqlInjection],
         ]);
 
@@ -52,6 +87,9 @@ class CategoryController extends Controller
 
     public function destroy(Category $category): RedirectResponse
     {
+        if (Auth::user()->isManager()) {
+            abort_if($category->user_id !== Auth::id(), 403);
+        }
         if ($category->products()->exists()) {
             return back()->with('error', 'Cannot delete category with existing products.');
         }

@@ -13,10 +13,15 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'category_id', 'name', 'description', 'sku',
+        'user_id', 'category_id', 'name', 'description', 'sku',
         'purchase_price', 'selling_price', 'stock_quantity',
         'low_stock_threshold', 'image_path',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function category(): BelongsTo
     {

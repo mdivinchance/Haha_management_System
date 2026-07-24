@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -90,11 +91,12 @@ class DashboardController extends Controller
 
     private function managerDashboard()
     {
-        $totalProducts = Product::count();
-        $totalCategories = Category::count();
-        $lowStockCount = Product::lowStock()->count();
-        $inventoryValue = Product::sum(DB::raw('stock_quantity * purchase_price'));
-        $recentProducts = Product::with('category')->latest()->take(5)->get();
+        $userId = Auth::id();
+        $totalProducts = Product::where('user_id', $userId)->count();
+        $totalCategories = Category::whereHas('products', fn($q) => $q->where('user_id', $userId))->count();
+        $lowStockCount = Product::where('user_id', $userId)->lowStock()->count();
+        $inventoryValue = Product::where('user_id', $userId)->sum(DB::raw('stock_quantity * purchase_price'));
+        $recentProducts = Product::with('category')->where('user_id', $userId)->latest()->take(5)->get();
 
         return view('dashboard', compact(
             'totalProducts', 'totalCategories', 'lowStockCount', 'inventoryValue', 'recentProducts'

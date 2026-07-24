@@ -13,6 +13,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
+        <x-toast />
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 px-4">
             <div class="mb-6 text-center">
                 <a href="/" class="text-3xl font-bold text-teal-400 tracking-tight">HAHA</a>

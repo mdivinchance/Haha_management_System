@@ -1,7 +1,7 @@
 <x-app-layout>
-    <div class="p-6 max-w-2xl">
+    <div class="max-w-2xl">
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Edit User</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Edit User</h1>
             <p class="text-gray-500 text-sm mt-1">Update user information</p>
         </div>
 
@@ -21,16 +21,6 @@
                 <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}" required
                     class="block w-full rounded-lg border border-gray-300 bg-gray-50 text-gray-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white px-4 py-2.5 placeholder-gray-500 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-colors text-sm">
                 @error('email') <p class="mt-1 text-xs text-red-400">{{ $message }}</p> @enderror
-            </div>
-
-            <div>
-                <label for="role" class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Role</label>
-                <select id="role" name="role" required
-                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 text-gray-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white px-4 py-2.5 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30 focus:outline-none transition-colors text-sm">
-                    <option value="manager" {{ old('role', $user->role) === 'manager' ? 'selected' : '' }}>Manager</option>
-                    <option value="super_admin" {{ old('role', $user->role) === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
-                </select>
-                @error('role') <p class="mt-1 text-xs text-red-400">{{ $message }}</p> @enderror
             </div>
 
             <div class="flex items-center gap-3 pt-2">

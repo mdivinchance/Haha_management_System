@@ -8,12 +8,12 @@
         },
         openLightbox(url) { this.lightboxUrl = url; },
         closeLightbox() { this.lightboxUrl = null; }
-    }" class="space-y-6">
+    }" class="space-y-4 sm:space-y-6">
 
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Products</h1>
-                <p class="text-gray-500 text-sm mt-1">Manage your inventory and stock</p>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Products</h1>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">Manage your inventory and stock</p>
             </div>
             <div class="flex items-center gap-3">
                 <button @click="toggleView" class="text-sm text-gray-500 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors" :title="viewMode === 'table' ? 'Switch to grid view' : 'Switch to table view'">
@@ -24,21 +24,24 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                     </template>
                 </button>
-                <a href="{{ route('products.create') }}" class="inline-flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors">
+                <a href="{{ route('products.create') }}" class="inline-flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-black font-semibold px-3 sm:px-4 py-2 rounded-lg text-sm transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                    New Product
+                    <span class="hidden sm:inline">New Product</span>
+                    <span class="sm:hidden">New</span>
                 </a>
             </div>
         </div>
 
+        {{-- Table view --}}
         <div x-show="viewMode === 'table'" class="panel overflow-hidden">
-            <div class="overflow-x-auto">
+            {{-- Desktop table --}}
+            <div class="hidden sm:block overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="text-teal-400 text-xs font-semibold uppercase tracking-widest">
                             <th class="text-left px-5 py-3">Product</th>
-                            <th class="text-left px-5 py-3">Category</th>
-                            <th class="text-left px-5 py-3">SKU</th>
+                            <th class="text-left px-5 py-3 hidden md:table-cell">Category</th>
+                            <th class="text-left px-5 py-3 hidden lg:table-cell">SKU</th>
                             <th class="text-right px-5 py-3">Price</th>
                             <th class="text-right px-5 py-3">Stock</th>
                             <th class="text-right px-5 py-3">Actions</th>
@@ -63,12 +66,12 @@
                                         @endif
                                         <div>
                                             <div class="text-gray-900 dark:text-white font-medium">{{ $product->name }}</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-600">{{ Str::limit($product->description, 40) }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-600 hidden lg:block">{{ Str::limit($product->description, 40) }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-5 py-3 text-gray-500 dark:text-gray-400">{{ $product->category->name ?? '—' }}</td>
-                                <td class="px-5 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">{{ $product->sku }}</td>
+                                <td class="px-5 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell">{{ $product->category->name ?? '—' }}</td>
+                                <td class="px-5 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs hidden lg:table-cell">{{ $product->sku }}</td>
                                 <td class="px-5 py-3 text-right text-gray-700 dark:text-gray-300">FRW {{ number_format($product->selling_price, 2) }}</td>
                                 <td class="px-5 py-3 text-right">
                                     <span class="{{ $product->isLowStock() ? 'text-orange-400 font-semibold' : ($product->stock_quantity == 0 ? 'text-red-400 font-semibold' : 'text-gray-700 dark:text-gray-300') }}">
@@ -76,7 +79,7 @@
                                     </span>
                                 </td>
                                 <td class="px-5 py-3 text-right">
-                                    <div class="flex items-center justify-end gap-2">
+                                    <div class="flex items-center justify-end gap-1 sm:gap-2">
                                         <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
                                             @csrf @method('PATCH')
                                             <input type="hidden" name="change" value="-1">
@@ -91,12 +94,12 @@
                                         <a href="{{ route('products.show', $product) }}" class="text-gray-500 hover:text-teal-400" title="Take Report">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                         </a>
-                                        <a href="{{ route('products.edit', $product) }}" class="text-gray-500 hover:text-teal-400">
+                                        <a href="{{ route('products.edit', $product) }}" class="text-gray-500 hover:text-teal-400 hidden sm:inline">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                         </a>
                                         <form action="{{ route('products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Delete this product?')">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="text-gray-500 hover:text-red-400">
+                                            <button type="submit" class="text-gray-500 hover:text-red-400 hidden sm:inline">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                             </button>
                                         </form>
@@ -111,9 +114,55 @@
                     </tbody>
                 </table>
             </div>
+
+            {{-- Mobile card list --}}
+            <div class="sm:hidden divide-y divide-gray-200 dark:divide-neutral-800">
+                @forelse ($products as $product)
+                    <a href="{{ route('products.show', $product) }}" class="block p-4 hover:bg-gray-100 dark:hover:bg-neutral-800/50 transition-colors">
+                        <div class="flex items-center gap-3">
+                            @if ($product->image_path)
+                                <img src="{{ Storage::url($product->image_path) }}" alt="" class="h-12 w-12 rounded-lg object-cover flex-shrink-0">
+                            @else
+                                <div class="h-12 w-12 rounded-lg bg-gray-200 dark:bg-neutral-800 flex items-center justify-center text-gray-500 flex-shrink-0">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                            @endif
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $product->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-neutral-500">{{ $product->category->name ?? '—' }} &middot; {{ $product->sku }}</p>
+                            </div>
+                            <div class="text-right flex-shrink-0">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">FRW {{ number_format($product->selling_price, 0) }}</p>
+                                <p class="text-xs {{ $product->isLowStock() ? 'text-orange-400' : ($product->stock_quantity == 0 ? 'text-red-400' : 'text-green-400') }}">{{ $product->stock_quantity }} in stock</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-neutral-800">
+                            <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="change" value="-1">
+                                <button type="submit" class="text-xs px-2 py-1 rounded bg-orange-500/10 text-orange-400">−</button>
+                            </form>
+                            <span class="text-xs font-mono text-gray-500">{{ $product->stock_quantity }}</span>
+                            <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="change" value="1">
+                                <button type="submit" class="text-xs px-2 py-1 rounded bg-teal-500/10 text-teal-400">+</button>
+                            </form>
+                            <a href="{{ route('products.edit', $product) }}" class="text-xs px-2 py-1 rounded bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400">Edit</a>
+                            <form action="{{ route('products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Delete this product?')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="text-xs px-2 py-1 rounded bg-red-500/10 text-red-400">Delete</button>
+                            </form>
+                        </div>
+                    </a>
+                @empty
+                    <div class="p-8 text-center text-gray-500">No products yet.</div>
+                @endforelse
+            </div>
         </div>
 
-        <div x-show="viewMode === 'grid'" x-cloak class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {{-- Grid view --}}
+        <div x-show="viewMode === 'grid'" x-cloak class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
             @forelse ($products as $product)
                 <div class="panel overflow-hidden group cursor-pointer" @if($product->image_path) @click="openLightbox('{{ Storage::url($product->image_path) }}')" @endif>
                     <div class="relative overflow-hidden rounded-lg mb-3 bg-gray-200 dark:bg-neutral-800 aspect-square">

@@ -30,7 +30,12 @@ class MoneyReportController extends Controller
         }
 
         $reports = $query->latest('report_date')->get();
-        $products = Product::all();
+
+        $productQuery = Product::query();
+        if (!auth()->user()->isSuperAdmin()) {
+            $productQuery->where('user_id', auth()->id());
+        }
+        $products = $productQuery->get();
 
         $totals = (object) [
             'total_revenue' => $reports->sum('total_revenue'),

@@ -23,8 +23,11 @@ class SecurityTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->category = Category::factory()->create();
-        $this->product = Product::factory()->create(['category_id' => $this->category->id]);
+        $this->category = Category::factory()->create(['user_id' => $this->user->id]);
+        $this->product = Product::factory()->create([
+            'user_id' => $this->user->id,
+            'category_id' => $this->category->id,
+        ]);
     }
 
     public function test_sql_injection_in_product_name_is_rejected(): void
@@ -120,6 +123,7 @@ class SecurityTest extends TestCase
     public function test_xss_in_product_name_is_escaped_in_output(): void
     {
         Product::factory()->create([
+            'user_id' => $this->user->id,
             'category_id' => $this->category->id,
             'name' => '<script>alert("xss")</script>',
         ]);
@@ -216,6 +220,7 @@ class SecurityTest extends TestCase
     {
         $report = DailyProductReport::create([
             'product_id' => $this->product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-10',
             'quantity_sold' => 1,
             'selling_price' => 10,
@@ -281,6 +286,7 @@ class SecurityTest extends TestCase
     public function test_category_with_products_cannot_be_deleted(): void
     {
         Product::factory()->create([
+            'user_id' => $this->user->id,
             'category_id' => $this->category->id,
         ]);
 
@@ -294,6 +300,7 @@ class SecurityTest extends TestCase
     public function test_duplicate_sku_is_rejected(): void
     {
         Product::factory()->create([
+            'user_id' => $this->user->id,
             'category_id' => $this->category->id,
             'sku' => 'DUP-001',
         ]);

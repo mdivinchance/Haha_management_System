@@ -7,17 +7,24 @@ use App\Models\Product;
 use App\Rules\NoSqlInjection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class DailyReportController extends Controller
 {
     public function create(Product $product): View
     {
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id(), 403);
+        }
         return view('daily-reports.create', compact('product'));
     }
 
     public function store(Request $request, Product $product): RedirectResponse
     {
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id(), 403);
+        }
         $validated = $request->validate([
             'report_date' => 'required|date',
             'quantity_sold' => 'required|integer|min:1',
@@ -39,6 +46,9 @@ class DailyReportController extends Controller
     public function edit(Product $product, DailyProductReport $dailyReport): View
     {
         abort_if($dailyReport->product_id !== $product->id, 404);
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id() || $dailyReport->user_id !== Auth::id(), 403);
+        }
 
         return view('daily-reports.edit', compact('product', 'dailyReport'));
     }
@@ -46,6 +56,9 @@ class DailyReportController extends Controller
     public function update(Request $request, Product $product, DailyProductReport $dailyReport): RedirectResponse
     {
         abort_if($dailyReport->product_id !== $product->id, 404);
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id() || $dailyReport->user_id !== Auth::id(), 403);
+        }
 
         $validated = $request->validate([
             'report_date' => 'required|date',
@@ -66,6 +79,9 @@ class DailyReportController extends Controller
     public function destroy(Product $product, DailyProductReport $dailyReport): RedirectResponse
     {
         abort_if($dailyReport->product_id !== $product->id, 404);
+        if (Auth::user()->isManager()) {
+            abort_if($product->user_id !== Auth::id() || $dailyReport->user_id !== Auth::id(), 403);
+        }
 
         $dailyReport->delete();
 

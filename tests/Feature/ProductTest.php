@@ -20,7 +20,7 @@ class ProductTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->category = Category::factory()->create();
+        $this->category = Category::factory()->create(['user_id' => $this->user->id]);
     }
 
     public function test_guest_is_redirected_to_login(): void
@@ -59,12 +59,14 @@ class ProductTest extends TestCase
             'name' => 'Test Product',
             'sku' => 'TST-001',
             'stock_quantity' => 50,
+            'user_id' => $this->user->id,
         ]);
     }
 
     public function test_product_appears_in_list_with_correct_stock(): void
     {
         $product = Product::factory()->create([
+            'user_id' => $this->user->id,
             'category_id' => $this->category->id,
             'name' => 'Visible Product',
             'stock_quantity' => 25,
@@ -81,6 +83,7 @@ class ProductTest extends TestCase
     public function test_stock_adjustment_creates_movement_record(): void
     {
         $product = Product::factory()->create([
+            'user_id' => $this->user->id,
             'category_id' => $this->category->id,
             'stock_quantity' => 10,
         ]);

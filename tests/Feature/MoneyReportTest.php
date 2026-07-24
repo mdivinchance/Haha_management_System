@@ -30,11 +30,12 @@ class MoneyReportTest extends TestCase
 
     public function test_money_report_shows_aggregated_totals(): void
     {
-        $category = Category::factory()->create();
-        $product = Product::factory()->create(['category_id' => $category->id]);
+        $category = Category::factory()->create(['user_id' => $this->user->id]);
+        $product = Product::factory()->create(['category_id' => $category->id, 'user_id' => $this->user->id]);
 
         DailyProductReport::create([
             'product_id' => $product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-08',
             'quantity_sold' => 5,
             'selling_price' => 20.00,
@@ -43,6 +44,7 @@ class MoneyReportTest extends TestCase
 
         DailyProductReport::create([
             'product_id' => $product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-09',
             'quantity_sold' => 3,
             'selling_price' => 25.00,
@@ -60,11 +62,12 @@ class MoneyReportTest extends TestCase
 
     public function test_money_report_filters_by_date_range(): void
     {
-        $category = Category::factory()->create();
-        $product = Product::factory()->create(['category_id' => $category->id]);
+        $category = Category::factory()->create(['user_id' => $this->user->id]);
+        $product = Product::factory()->create(['category_id' => $category->id, 'user_id' => $this->user->id]);
 
         DailyProductReport::create([
             'product_id' => $product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-08',
             'quantity_sold' => 5,
             'selling_price' => 20.00,
@@ -73,6 +76,7 @@ class MoneyReportTest extends TestCase
 
         DailyProductReport::create([
             'product_id' => $product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-10',
             'quantity_sold' => 3,
             'selling_price' => 25.00,
@@ -88,12 +92,13 @@ class MoneyReportTest extends TestCase
 
     public function test_money_report_filters_by_product(): void
     {
-        $category = Category::factory()->create();
-        $productA = Product::factory()->create(['category_id' => $category->id, 'name' => 'Product A']);
-        $productB = Product::factory()->create(['category_id' => $category->id, 'name' => 'Product B']);
+        $category = Category::factory()->create(['user_id' => $this->user->id]);
+        $productA = Product::factory()->create(['category_id' => $category->id, 'name' => 'Product A', 'user_id' => $this->user->id]);
+        $productB = Product::factory()->create(['category_id' => $category->id, 'name' => 'Product B', 'user_id' => $this->user->id]);
 
         DailyProductReport::create([
             'product_id' => $productA->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-08',
             'quantity_sold' => 5,
             'selling_price' => 20.00,
@@ -102,6 +107,7 @@ class MoneyReportTest extends TestCase
 
         DailyProductReport::create([
             'product_id' => $productB->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-08',
             'quantity_sold' => 10,
             'selling_price' => 50.00,

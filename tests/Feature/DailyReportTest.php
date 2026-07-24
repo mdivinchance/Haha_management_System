@@ -23,7 +23,8 @@ class DailyReportTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->product = Product::factory()->create([
-            'category_id' => Category::factory()->create()->id,
+            'user_id' => $this->user->id,
+            'category_id' => Category::factory()->create(['user_id' => $this->user->id])->id,
         ]);
 
         $this->defaultPayload = [
@@ -116,6 +117,7 @@ class DailyReportTest extends TestCase
     {
         $report = DailyProductReport::create([
             'product_id' => $this->product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-08',
             'quantity_sold' => 3,
             'selling_price' => 25.00,
@@ -149,6 +151,7 @@ class DailyReportTest extends TestCase
     {
         $report = DailyProductReport::create([
             'product_id' => $this->product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-08',
             'quantity_sold' => 3,
             'selling_price' => 25.00,
@@ -166,6 +169,7 @@ class DailyReportTest extends TestCase
     {
         $report = DailyProductReport::create([
             'product_id' => $this->product->id,
+            'user_id' => $this->user->id,
             'report_date' => '2026-07-08',
             'quantity_sold' => 3,
             'selling_price' => 25.00,

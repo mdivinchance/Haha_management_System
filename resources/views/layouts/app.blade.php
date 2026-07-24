@@ -2,8 +2,9 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="theme-color" content="#14b8a6">
 
         <title>{{ config('app.name', 'Haha_system') }} @isset($title) - {{ $title }} @endisset</title>
 
@@ -13,12 +14,13 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
+        <x-toast />
         <div class="flex min-h-screen">
             @include('layouts.sidebar')
 
             <div class="flex-1 lg:pl-64">
-                <div class="p-6">
-                    <div x-data="{ theme: localStorage.getItem('theme') || 'dark' }" class="flex justify-end mb-4">
+                <div class="p-4 sm:p-5 lg:p-6 xl:p-8 max-w-[1600px]">
+                    <div x-data="{ theme: localStorage.getItem('theme') || 'dark' }" class="flex justify-end mb-3 sm:mb-4">
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:text-gray-900 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:text-white">
                                 <svg x-show="theme === 'dark'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>

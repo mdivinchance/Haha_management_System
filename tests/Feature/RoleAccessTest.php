@@ -101,7 +101,7 @@ class RoleAccessTest extends TestCase
 
     public function test_manager_can_access_products(): void
     {
-        $category = Category::factory()->create();
+        $category = Category::factory()->create(['user_id' => $this->manager->id]);
         $response = $this->actingAs($this->manager)->get(route('products.index'));
         $response->assertStatus(200);
     }
