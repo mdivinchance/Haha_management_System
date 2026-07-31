@@ -12,15 +12,25 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script>
+            (function() {
+                var theme = localStorage.getItem('theme') || 'dark';
+                if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+        </script>
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased overflow-x-hidden">
         <x-toast />
         <div class="flex min-h-screen">
             @include('layouts.sidebar')
 
             <div class="flex-1 lg:pl-64">
-                <div class="p-4 sm:p-5 lg:p-6 xl:p-8 max-w-[1600px]">
-                    <div x-data="{ theme: localStorage.getItem('theme') || 'dark' }" class="flex justify-end mb-3 sm:mb-4">
+                <div class="p-4 sm:p-5 lg:p-6 xl:p-8 pb-24 lg:pb-6 max-w-[1600px]">
+                    <div x-data="{ theme: localStorage.getItem('theme') || 'dark' }" class="hidden lg:flex justify-end mb-3 sm:mb-4">
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:text-gray-900 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:text-white">
                                 <svg x-show="theme === 'dark'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>

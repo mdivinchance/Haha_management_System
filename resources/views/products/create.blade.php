@@ -92,19 +92,45 @@
 
                 <div>
                     <label for="category_id" class="form-label">Category</label>
-                    <select id="category_id" name="category_id" required class="input-field">
-                        <option value="">Select category</option>
-                        @foreach ($categories as $cat)
-                            <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative"
+                         x-data="{
+                            open: false,
+                            search: '',
+                            selectedId: {{ old('category_id') ?: 'null' }},
+                            selectedName: {{ json_encode(old('category_id') ? ($categories->firstWhere('id', old('category_id'))->name ?? '') : '') }},
+                            categories: {{ json_encode($categories->map(fn($c) => ['id' => $c->id, 'name' => $c->name])->values()) }},
+                            get filtered() {
+                                return this.categories.filter(c => c.name.toLowerCase().includes(this.search.toLowerCase()));
+                            },
+                            select(c) {
+                                this.selectedId = c.id;
+                                this.selectedName = c.name;
+                                this.search = '';
+                                this.open = false;
+                            }
+                         }">
+                        <input type="hidden" name="category_id" :value="selectedId">
+                        <input id="category_id" type="text"
+                               :value="open ? search : selectedName"
+                               @input="search = $event.target.value"
+                               @focus="open = true"
+                               @click.away="open = false"
+                               placeholder="Search and select a category..."
+                               class="input-field">
+                        <svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        <div x-show="open" x-cloak
+                             class="absolute z-10 mt-1 w-full rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-lg max-h-48 overflow-y-auto">
+                            <template x-for="c in filtered" :key="c.id">
+                                <button type="button" @click="select(c)"
+                                        class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700"
+                                        :class="selectedId === c.id ? 'bg-teal-500/10 text-teal-400' : ''">
+                                    <span x-text="c.name"></span>
+                                </button>
+                            </template>
+                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-neutral-500">No categories found</div>
+                        </div>
+                    </div>
                     @error('category_id') <p class="form-error">{{ $message }}</p> @enderror
-                </div>
-
-                <div>
-                    <label for="sku" class="form-label">SKU</label>
-                    <input id="sku" type="text" name="sku" value="{{ old('sku') }}" required class="input-field" placeholder="e.g. SHO-001">
-                    @error('sku') <p class="form-error">{{ $message }}</p> @enderror
                 </div>
 
                 <div>

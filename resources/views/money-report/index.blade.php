@@ -101,7 +101,7 @@
                                     <td class="px-4 sm:px-5 py-3 text-right text-gray-700 dark:text-gray-300">{{ $report->quantity_sold }}</td>
                                     <td class="px-4 sm:px-5 py-3 text-right text-gray-700 dark:text-gray-300 hidden md:table-cell">FRW {{ number_format($report->selling_price, 2) }}</td>
                                     <td class="px-4 sm:px-5 py-3 text-right text-teal-400 font-semibold">FRW {{ number_format($report->total_revenue, 2) }}</td>
-                                    <td class="px-4 sm:px-5 py-3 text-gray-500 dark:text-gray-400 text-xs hidden lg:table-cell">{{ $report->payment_method === 'mobile_money' ? 'Momo' : 'Cash' }}</td>
+                                    <td class="px-4 sm:px-5 py-3 text-gray-500 dark:text-gray-400 text-xs hidden lg:table-cell"><x-payment-badge :method="$report->payment_method" /></td>
                                     <td class="px-4 sm:px-5 py-3 text-gray-500 max-w-xs truncate hidden lg:table-cell">{{ $report->notes ?: '—' }}</td>
                                 </tr>
                             @empty

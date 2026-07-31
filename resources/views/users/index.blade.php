@@ -60,14 +60,20 @@
                                         @if($user->is_active)
                                             <form action="{{ route('users.deactivate', $user) }}" method="POST" class="inline" onsubmit="return confirm('Deactivate this user?')">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" class="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 text-xs font-medium">Deactivate</button>
+                                                <button type="submit" class="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 text-xs font-medium mr-3">Deactivate</button>
                                             </form>
                                         @else
                                             <form action="{{ route('users.activate', $user) }}" method="POST" class="inline">
                                                 @csrf @method('PATCH')
-                                                <button type="submit" class="text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-400 text-xs font-medium">Activate</button>
+                                                <button type="submit" class="text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-400 text-xs font-medium mr-3">Activate</button>
                                             </form>
                                         @endif
+                                    @endif
+                                    @if(!$user->isSuperAdmin())
+                                        <form action="{{ route('users.delete', $user) }}" method="POST" class="inline" onsubmit="return confirm('Delete this user permanently?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-500 text-xs font-medium">Delete</button>
+                                        </form>
                                     @endif
                                 </td>
                             </tr>
@@ -119,6 +125,12 @@
                                         <button type="submit" class="text-xs px-3 py-1.5 rounded-lg bg-green-500/10 text-green-400 font-medium">Activate</button>
                                     </form>
                                 @endif
+                            @endif
+                            @if(!$user->isSuperAdmin())
+                                <form action="{{ route('users.delete', $user) }}" method="POST" onsubmit="return confirm('Delete this user permanently?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="text-xs px-3 py-1.5 rounded-lg bg-red-600 text-white font-medium">Delete</button>
+                                </form>
                             @endif
                         </div>
                     </div>

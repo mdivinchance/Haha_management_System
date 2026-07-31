@@ -32,6 +32,22 @@
             </div>
         </div>
 
+        <form method="GET" action="{{ route('products.index') }}" class="panel p-3 sm:p-4">
+            <div class="flex items-center gap-2">
+                <div class="relative flex-1">
+                    <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products by name or description..."
+                           class="input-field pl-10">
+                </div>
+                <button type="submit" class="btn-primary flex-shrink-0">Search</button>
+                @if(request('search'))
+                    <a href="{{ route('products.index') }}" class="text-sm text-gray-500 hover:text-gray-700 dark:text-neutral-400 dark:hover:text-neutral-300 flex-shrink-0">
+                        Clear
+                    </a>
+                @endif
+            </div>
+        </form>
+
         {{-- Table view --}}
         <div x-show="viewMode === 'table'" class="panel overflow-hidden">
             {{-- Desktop table --}}

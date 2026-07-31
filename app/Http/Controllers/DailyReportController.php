@@ -30,7 +30,7 @@ class DailyReportController extends Controller
             'quantity_sold' => 'required|integer|min:1',
             'selling_price' => 'required|numeric|min:0',
             'notes' => ['nullable', 'string', 'max:500', new NoSqlInjection],
-            'payment_method' => 'required|in:cash,mobile_money',
+            'payment_method' => 'required|in:cash,mobile_money,not_paid',
         ]);
 
         $validated['total_revenue'] = $validated['quantity_sold'] * $validated['selling_price'];
@@ -65,7 +65,7 @@ class DailyReportController extends Controller
             'quantity_sold' => 'required|integer|min:1',
             'selling_price' => 'required|numeric|min:0',
             'notes' => ['nullable', 'string', 'max:500', new NoSqlInjection],
-            'payment_method' => 'required|in:cash,mobile_money',
+            'payment_method' => 'required|in:cash,mobile_money,not_paid',
         ]);
 
         $validated['total_revenue'] = $validated['quantity_sold'] * $validated['selling_price'];

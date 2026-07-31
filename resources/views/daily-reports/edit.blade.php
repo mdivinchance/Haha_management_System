@@ -56,6 +56,7 @@
                     <select id="payment_method" name="payment_method" required class="input-field">
                         <option value="cash" {{ old('payment_method', $dailyReport->payment_method) == 'cash' ? 'selected' : '' }}>Cash</option>
                         <option value="mobile_money" {{ old('payment_method', $dailyReport->payment_method) == 'mobile_money' ? 'selected' : '' }}>Momo</option>
+                        <option value="not_paid" {{ old('payment_method', $dailyReport->payment_method) == 'not_paid' ? 'selected' : '' }}>Not Paid</option>
                     </select>
                     @error('payment_method') <p class="form-error">{{ $message }}</p> @enderror
                 </div>

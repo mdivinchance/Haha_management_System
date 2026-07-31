@@ -96,7 +96,7 @@
                                             <td class="px-3 py-3 text-right text-gray-300">{{ $report->quantity_sold }}</td>
                                             <td class="px-3 py-3 text-right text-gray-300 hidden md:table-cell">FRW {{ number_format($report->selling_price, 2) }}</td>
                                             <td class="px-3 py-3 text-right text-teal-400 font-semibold">FRW {{ number_format($report->total_revenue, 2) }}</td>
-                                            <td class="px-3 py-3 text-gray-400 text-xs hidden lg:table-cell">{{ $report->payment_method === 'mobile_money' ? 'Momo' : 'Cash' }}</td>
+                                            <td class="px-3 py-3 text-gray-400 text-xs hidden lg:table-cell"><x-payment-badge :method="$report->payment_method" /></td>
                                             <td class="px-3 py-3 text-gray-500 max-w-[200px] truncate hidden lg:table-cell">{{ $report->notes ?: '—' }}</td>
                                             <td class="px-3 py-3 text-right">
                                                 <div class="flex items-center justify-end gap-2">
@@ -130,7 +130,7 @@
                                         <span>&middot;</span>
                                         <span>FRW {{ number_format($report->selling_price, 2) }}/ea</span>
                                         <span>&middot;</span>
-                                        <span>{{ $report->payment_method === 'mobile_money' ? 'Momo' : 'Cash' }}</span>
+                                        <x-payment-badge :method="$report->payment_method" />
                                     </div>
                                     @if($report->notes)
                                         <p class="text-xs text-gray-500 mb-2">{{ $report->notes }}</p>

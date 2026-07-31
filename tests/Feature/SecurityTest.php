@@ -48,24 +48,6 @@ class SecurityTest extends TestCase
         $response->assertSessionHasErrors(['name']);
     }
 
-    public function test_sql_injection_in_product_sku_is_rejected(): void
-    {
-        $payload = [
-            'category_id' => $this->category->id,
-            'name' => 'Safe Name',
-            'sku' => 'SKU"; DROP TABLE products; --',
-            'purchase_price' => 10,
-            'selling_price' => 20,
-            'stock_quantity' => 10,
-            'low_stock_threshold' => 5,
-        ];
-
-        $response = $this->actingAs($this->user)
-            ->post(route('products.store'), $payload);
-
-        $response->assertSessionHasErrors(['sku']);
-    }
-
     public function test_sql_injection_in_product_description_is_rejected(): void
     {
         $payload = [
@@ -295,27 +277,5 @@ class SecurityTest extends TestCase
 
         $response->assertSessionHas('error');
         $this->assertDatabaseHas('categories', ['id' => $this->category->id]);
-    }
-
-    public function test_duplicate_sku_is_rejected(): void
-    {
-        Product::factory()->create([
-            'user_id' => $this->user->id,
-            'category_id' => $this->category->id,
-            'sku' => 'DUP-001',
-        ]);
-
-        $response = $this->actingAs($this->user)
-            ->post(route('products.store'), [
-                'category_id' => $this->category->id,
-                'name' => 'Test',
-                'sku' => 'DUP-001',
-                'purchase_price' => 10,
-                'selling_price' => 20,
-                'stock_quantity' => 10,
-                'low_stock_threshold' => 5,
-            ]);
-
-        $response->assertSessionHasErrors(['sku']);
     }
 }

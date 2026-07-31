@@ -57,9 +57,13 @@ class ProductTest extends TestCase
 
         $this->assertDatabaseHas('products', [
             'name' => 'Test Product',
-            'sku' => 'TST-001',
             'stock_quantity' => 50,
             'user_id' => $this->user->id,
+        ]);
+
+        $this->assertDatabaseHas('products', [
+            'name' => 'Test Product',
+            'sku' => 'SKU-000001',
         ]);
     }
 

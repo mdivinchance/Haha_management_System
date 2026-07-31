@@ -77,4 +77,19 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User activated.');
     }
+
+    public function destroy(User $user): RedirectResponse
+    {
+        if ((int) $user->id === (int) auth()->id()) {
+            return back()->with('error', 'You cannot delete your own account.');
+        }
+
+        if ($user->isSuperAdmin() && User::where('role', 'super_admin')->where('is_active', true)->count() <= 1) {
+            return back()->with('error', 'Cannot delete the last active super admin.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'User deleted.');
+    }
 }

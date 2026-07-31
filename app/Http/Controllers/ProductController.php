@@ -23,9 +23,19 @@ class ProductController extends Controller
         return $query;
     }
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $products = $this->scopeQuery(Product::with('category'))->latest()->get();
+        $query = $this->scopeQuery(Product::with('category'));
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $products = $query->latest()->get();
         return view('products.index', compact('products'));
     }
 
@@ -54,7 +64,6 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'name' => ['required', 'string', 'max:255', new NoSqlInjection],
             'description' => ['nullable', 'string', new NoSqlInjection],
-            'sku' => ['required', 'string', 'max:100', new NoSqlInjection, 'unique:products'],
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
@@ -70,8 +79,14 @@ class ProductController extends Controller
 
         unset($validated['image'], $validated['camera_image']);
 
+        $category = Category::find($validated['category_id']);
+        if ($category && Auth::user()->isManager() && $category->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $validated['user_id'] = auth()->id();
         $product = Product::create($validated);
+        $product->update(['sku' => 'SKU-' . str_pad($product->id, 6, '0', STR_PAD_LEFT)]);
 
         if ($product->stock_quantity > 0) {
             StockMovement::create([
@@ -106,7 +121,6 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'name' => ['required', 'string', 'max:255', new NoSqlInjection],
             'description' => ['nullable', 'string', new NoSqlInjection],
-            'sku' => ['required', 'string', 'max:100', new NoSqlInjection, 'unique:products,sku,' . $product->id],
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
@@ -121,6 +135,11 @@ class ProductController extends Controller
         }
 
         unset($validated['image'], $validated['camera_image']);
+
+        $category = Category::find($validated['category_id']);
+        if ($category && Auth::user()->isManager() && $category->user_id !== Auth::id()) {
+            abort(403);
+        }
 
         $stockChange = $validated['stock_quantity'] - $product->stock_quantity;
 

@@ -41,6 +41,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('users/{user}', [UserController::class, 'deactivate'])->name('users.deactivate');
     Route::patch('users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
+    Route::delete('users/{user}/delete', [UserController::class, 'destroy'])->name('users.delete');
 });
 
 require __DIR__.'/auth.php';
