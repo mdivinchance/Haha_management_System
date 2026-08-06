@@ -2,12 +2,26 @@
     <div x-data="{
         viewMode: localStorage.getItem('productViewMode') || 'table',
         lightboxUrl: null,
+        stockOpen: false,
+        stockProduct: null,
+        stockType: 'add',
+        stockQty: 1,
         toggleView() {
             this.viewMode = this.viewMode === 'table' ? 'grid' : 'table';
             localStorage.setItem('productViewMode', this.viewMode);
         },
         openLightbox(url) { this.lightboxUrl = url; },
-        closeLightbox() { this.lightboxUrl = null; }
+        closeLightbox() { this.lightboxUrl = null; },
+        openStock(id, type, name) {
+            this.stockProduct = { id: id, name: name };
+            this.stockType = type;
+            this.stockQty = 1;
+            this.stockOpen = true;
+        },
+        closeStock() {
+            this.stockOpen = false;
+            this.stockProduct = null;
+        }
     }" class="space-y-4 sm:space-y-6">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -101,17 +115,11 @@
                                 </td>
                                 <td class="px-5 py-3 text-right">
                                     <div class="flex items-center justify-end gap-1 sm:gap-2">
-                                        <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="change" value="-1">
-                                            <button type="submit" class="text-gray-500 hover:text-orange-400 p-1" title="Decrease stock">−</button>
-                                        </form>
+                                        <button type="button" @click="openStock({{ $product->id }}, 'remove', $el.dataset.name)" data-name="{{ $product->name }}"
+                                                class="text-gray-500 hover:text-teal-400 p-1 text-lg font-bold" title="Remove stock">−</button>
                                         <span class="text-xs text-gray-500 dark:text-gray-600 w-4 text-center font-mono">{{ $product->stock_quantity }}</span>
-                                        <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="change" value="1">
-                                            <button type="submit" class="text-gray-500 hover:text-teal-400 p-1" title="Increase stock">+</button>
-                                        </form>
+                                        <button type="button" @click="openStock({{ $product->id }}, 'add', $el.dataset.name)" data-name="{{ $product->name }}"
+                                                class="text-gray-500 hover:text-teal-400 p-1 text-lg font-bold" title="Add stock">+</button>
                                         <a href="{{ route('products.show', $product) }}" class="text-gray-500 hover:text-teal-400" title="Take Report">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                         </a>
@@ -158,17 +166,11 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-neutral-800">
-                            <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
-                                @csrf @method('PATCH')
-                                <input type="hidden" name="change" value="-1">
-                                <button type="submit" class="text-xs px-2 py-1 rounded bg-orange-500/10 text-orange-400">−</button>
-                            </form>
+                            <button type="button" @click.stop="openStock({{ $product->id }}, 'remove', $el.dataset.name)" data-name="{{ $product->name }}"
+                                    class="text-xs px-2 py-1 rounded bg-teal-500/10 text-teal-400 font-bold">−</button>
                             <span class="text-xs font-mono text-gray-500">{{ $product->stock_quantity }}</span>
-                            <form action="{{ route('products.adjust-stock', $product) }}" method="POST" class="inline-flex items-center gap-1">
-                                @csrf @method('PATCH')
-                                <input type="hidden" name="change" value="1">
-                                <button type="submit" class="text-xs px-2 py-1 rounded bg-teal-500/10 text-teal-400">+</button>
-                            </form>
+                            <button type="button" @click.stop="openStock({{ $product->id }}, 'add', $el.dataset.name)" data-name="{{ $product->name }}"
+                                    class="text-xs px-2 py-1 rounded bg-teal-500/10 text-teal-400 font-bold">+</button>
                             <a href="{{ route('products.edit', $product) }}" class="text-xs px-2 py-1 rounded bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400">Edit</a>
                             <form action="{{ route('products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Delete this product?')">
                                 @csrf @method('DELETE')
@@ -207,16 +209,10 @@
                             <a href="{{ route('products.show', $product) }}" class="text-gray-500 dark:text-neutral-500 hover:text-teal-400 p-1 text-xs" title="Take Report">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </a>
-                            <form action="{{ route('products.adjust-stock', $product) }}" method="POST">
-                                @csrf @method('PATCH')
-                                <input type="hidden" name="change" value="-1">
-                                <button type="submit" class="text-gray-500 dark:text-neutral-500 hover:text-orange-400 text-sm px-1">−</button>
-                            </form>
-                            <form action="{{ route('products.adjust-stock', $product) }}" method="POST">
-                                @csrf @method('PATCH')
-                                <input type="hidden" name="change" value="1">
-                                <button type="submit" class="text-gray-500 dark:text-neutral-500 hover:text-teal-400 text-sm px-1">+</button>
-                            </form>
+                            <button type="button" @click="openStock({{ $product->id }}, 'remove', $el.dataset.name)" data-name="{{ $product->name }}"
+                                    class="text-gray-500 dark:text-neutral-500 hover:text-teal-400 text-sm px-1 font-bold">−</button>
+                            <button type="button" @click="openStock({{ $product->id }}, 'add', $el.dataset.name)" data-name="{{ $product->name }}"
+                                    class="text-gray-500 dark:text-neutral-500 hover:text-teal-400 text-sm px-1 font-bold">+</button>
                         </div>
                     </div>
                 </div>
@@ -238,5 +234,42 @@
                         class="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-200/80 dark:bg-neutral-800/80 text-gray-900 dark:text-white flex items-center justify-center hover:bg-gray-300 dark:hover:bg-neutral-700">&times;</button>
             </div>
         </template>
+
+        {{-- Stock add/remove modal --}}
+        <div x-show="stockOpen" x-cloak x-transition.opacity
+             class="fixed inset-0 z-[90] flex items-center justify-center p-4"
+             @keydown.escape.window="closeStock()">
+            <div class="absolute inset-0 bg-black/50" @click="closeStock()"></div>
+            <form :action="stockProduct ? '/products/' + stockProduct.id + '/adjust-stock' : '#'"
+                  method="POST"
+                  class="relative w-full max-w-sm panel shadow-2xl"
+                  @submit="stockOpen = false">
+                @csrf
+                @method('PATCH')
+                <div x-show="stockProduct" x-cloak>
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white"
+                            x-text="stockType === 'add' ? 'Add Stock' : 'Remove Stock'"></h3>
+                        <button type="button" @click="closeStock()"
+                                class="h-7 w-7 rounded-full bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-neutral-700">&times;</button>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-neutral-400 truncate" x-text="stockProduct.name"></p>
+                    <label for="stock_qty" class="form-label mt-4">Quantity</label>
+                    <input id="stock_qty" type="number" x-model.number="stockQty" min="1" step="1" required
+                           class="input-field"
+                           placeholder="Enter number of items">
+                    <input type="hidden" name="change" :value="stockType === 'add' ? stockQty : -stockQty">
+                    <p class="text-xs text-gray-500 dark:text-neutral-500 mt-2"
+                       x-text="stockType === 'add' ? 'These items will be added to the current stock.' : 'These items will be removed from the current stock.'"></p>
+                    <div class="flex items-center gap-2 mt-4">
+                        <button type="submit"
+                                class="flex-1 bg-teal-500 hover:bg-teal-400 text-black font-semibold rounded-lg px-4 py-2 text-sm transition-colors"
+                                x-text="stockType === 'add' ? 'Add Items' : 'Remove Items'"></button>
+                        <button type="button" @click="closeStock()"
+                                class="flex-1 rounded-lg bg-gray-200 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 px-4 py-2 text-sm font-medium">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </x-app-layout>

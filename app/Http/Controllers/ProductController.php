@@ -179,6 +179,10 @@ class ProductController extends Controller
             'reason' => ['nullable', 'string', 'max:255', new NoSqlInjection],
         ]);
 
+        if ($validated['change'] < 0 && abs($validated['change']) > $product->stock_quantity) {
+            return back()->with('error', 'Cannot remove more than the current stock (' . $product->stock_quantity . ').');
+        }
+
         $product->stock_quantity += $validated['change'];
         $product->save();
 
@@ -188,7 +192,9 @@ class ProductController extends Controller
             'reason' => $validated['reason'] ?? 'Manual adjustment',
         ]);
 
-        return redirect()->back()->with('success', 'Stock adjusted.');
+        return redirect()->back()->with('success', $validated['change'] >= 0
+            ? 'Stock increased by ' . $validated['change'] . '.'
+            : 'Stock decreased by ' . abs($validated['change']) . '.');
     }
 
     public function pdf(): \Illuminate\Http\Response

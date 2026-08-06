@@ -1,8 +1,19 @@
 <x-app-layout>
     <div x-data="{
         lightboxUrl: null,
+        stockOpen: false,
+        stockType: 'add',
+        stockQty: 1,
         openLightbox(url) { this.lightboxUrl = url; },
-        closeLightbox() { this.lightboxUrl = null; }
+        closeLightbox() { this.lightboxUrl = null; },
+        openStock(type) {
+            this.stockType = type;
+            this.stockQty = 1;
+            this.stockOpen = true;
+        },
+        closeStock() {
+            this.stockOpen = false;
+        }
     }" class="space-y-4 sm:space-y-6">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -57,7 +68,11 @@
                         </div>
                         <div>
                             <p class="text-neutral-500 text-xs">Stock</p>
-                            <p class="text-white font-medium">{{ $product->stock_quantity }}</p>
+                            <div class="flex items-center gap-2">
+                                <button type="button" @click="openStock('remove')" class="text-gray-500 hover:text-teal-400 font-bold text-lg leading-none" title="Remove stock">−</button>
+                                <p class="text-white font-medium">{{ $product->stock_quantity }}</p>
+                                <button type="button" @click="openStock('add')" class="text-gray-500 hover:text-teal-400 font-bold text-lg leading-none" title="Add stock">+</button>
+                            </div>
                         </div>
                         <div>
                             <p class="text-neutral-500 text-xs">Low Threshold</p>
@@ -165,5 +180,39 @@
                         class="absolute top-4 right-4 h-8 w-8 rounded-full bg-neutral-800/80 text-white flex items-center justify-center hover:bg-neutral-700">&times;</button>
             </div>
         </template>
+
+        {{-- Stock add/remove modal --}}
+        <div x-show="stockOpen" x-cloak x-transition.opacity
+             class="fixed inset-0 z-[90] flex items-center justify-center p-4"
+             @keydown.escape.window="closeStock()">
+            <div class="absolute inset-0 bg-black/50" @click="closeStock()"></div>
+            <form action="{{ route('products.adjust-stock', $product) }}" method="POST"
+                  class="relative w-full max-w-sm panel shadow-2xl"
+                  @submit="stockOpen = false">
+                @csrf
+                @method('PATCH')
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white"
+                        x-text="stockType === 'add' ? 'Add Stock' : 'Remove Stock'"></h3>
+                    <button type="button" @click="closeStock()"
+                            class="h-7 w-7 rounded-full bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-neutral-700">&times;</button>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-neutral-400 truncate">{{ $product->name }}</p>
+                <label for="stock_qty" class="form-label mt-4">Quantity</label>
+                <input id="stock_qty" type="number" x-model.number="stockQty" min="1" step="1" required
+                       class="input-field"
+                       placeholder="Enter number of items">
+                <input type="hidden" name="change" :value="stockType === 'add' ? stockQty : -stockQty">
+                <p class="text-xs text-gray-500 dark:text-neutral-500 mt-2"
+                   x-text="stockType === 'add' ? 'These items will be added to the current stock.' : 'These items will be removed from the current stock.'"></p>
+                <div class="flex items-center gap-2 mt-4">
+                    <button type="submit"
+                            class="flex-1 bg-teal-500 hover:bg-teal-400 text-black font-semibold rounded-lg px-4 py-2 text-sm transition-colors"
+                            x-text="stockType === 'add' ? 'Add Items' : 'Remove Items'"></button>
+                    <button type="button" @click="closeStock()"
+                            class="flex-1 rounded-lg bg-gray-200 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 px-4 py-2 text-sm font-medium">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </x-app-layout>
