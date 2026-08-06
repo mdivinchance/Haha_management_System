@@ -41,6 +41,9 @@ class MoneyReportController extends Controller
             'total_revenue' => $reports->sum('total_revenue'),
             'total_quantity' => $reports->sum('quantity_sold'),
             'report_count' => $reports->count(),
+            'total_cash' => $reports->where('payment_method', 'cash')->sum('total_revenue'),
+            'total_momo' => $reports->where('payment_method', 'mobile_money')->sum('total_revenue'),
+            'total_unpaid' => $reports->where('payment_method', 'not_paid')->sum('total_revenue'),
         ];
 
         $dailySummary = $reports->groupBy(fn ($r) => $r->report_date->format('Y-m-d'))->map(function ($day) {

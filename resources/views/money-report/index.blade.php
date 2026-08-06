@@ -30,6 +30,21 @@
             </div>
         </form>
 
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div class="stat-card border-t-2 border-green-500">
+                <span class="stat-label">Total Cash</span>
+                <span class="stat-value text-green-500">FRW {{ number_format($totals->total_cash, 2) }}</span>
+            </div>
+            <div class="stat-card border-t-2 border-blue-500">
+                <span class="stat-label">Total Momo</span>
+                <span class="stat-value text-blue-500">FRW {{ number_format($totals->total_momo, 2) }}</span>
+            </div>
+            <div class="stat-card border-t-2 border-red-500">
+                <span class="stat-label">Unpaid Money</span>
+                <span class="stat-value text-red-500">FRW {{ number_format($totals->total_unpaid, 2) }}</span>
+            </div>
+        </div>
+
         <div class="grid grid-cols-3 gap-3 sm:gap-4">
             <div class="stat-card border-t-2 border-teal-500">
                 <span class="stat-label">Total Revenue</span>
