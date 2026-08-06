@@ -191,6 +191,17 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Stock adjusted.');
     }
 
+    public function pdf(): \Illuminate\Http\Response
+    {
+        $query = $this->scopeQuery(Product::with('category'));
+        $products = $query->latest()->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('products.pdf', compact('products'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('products-list.pdf');
+    }
+
     private function handleImageUpload(Request $request, ?Product $product = null): ?string
     {
         if ($request->hasFile('image')) {

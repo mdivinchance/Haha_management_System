@@ -19,6 +19,7 @@ Route::middleware(['auth', 'role:super_admin,manager'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::patch('products/{product}/adjust-stock', [ProductController::class, 'adjustStock'])->name('products.adjust-stock');
+    Route::get('products-pdf', [ProductController::class, 'pdf'])->name('products.pdf');
     Route::get('products/{product}/reports/create', [DailyReportController::class, 'create'])->name('daily-reports.create');
     Route::post('products/{product}/reports', [DailyReportController::class, 'store'])->name('daily-reports.store');
     Route::get('products/{product}/reports/{dailyReport}/edit', [DailyReportController::class, 'edit'])->name('daily-reports.edit');
